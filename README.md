@@ -16,4 +16,4 @@ We don't care about the chemistry exactness of the generated SMILES, we just wan
 
 We are using Pytorch with CPU-only and RDKit. Make sure that they are alredy installed on your computer.
 
-**Thanks to : @LamUong
+**Thanks to : @LamUong**
