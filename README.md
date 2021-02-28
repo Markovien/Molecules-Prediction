@@ -5,12 +5,12 @@ We don't care about the chemistry exactness of the predicted SMILES, we just wan
 
 # How to use
 
-First: put all python codes in the same folder. Let call this folder "main".
-Second: if you want to train your RNN with ChEBI 3 stars molecules, run download_data_set.py.
+- First: put all python codes in the same folder. Let call this folder "main".
+- Second: if you want to train your RNN with ChEBI 3 stars molecules, run download_data_set.py.
         Else, create a new folder in main and call it "data". then, put inside chembl_smiles.txt.
-Third: run data_processing.py
-Fourth: run generator_training.py
-Finally: test your trained RNN with generator_test.py
+- Third: run data_processing.py
+- Fourth: run generator_training.py
+- Finally: test your trained RNN with generator_test.py
 
 # Good to know
 
