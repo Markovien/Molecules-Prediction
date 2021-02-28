@@ -1,7 +1,7 @@
-# RNN program for molecules prediction with Pytorch
+# RNN program for generating (novel) molecules with Pytorch
 
-the purpose of this project is to train a RNN with Pytorch in order to predict the SMILES description of molecule.
-We don't care about the chemistry exactness of the predicted SMILES, we just want to predict something which can be considered as a molecule (verification with RDKit); this open the door for ameliorations.
+the purpose of this project is to train a RNN with Pytorch in order to generate the SMILES description of molecule.
+We don't care about the chemistry exactness of the generated SMILES, we just want to generate something molecule like (verification with RDKit); this open the door for ameliorations.
 
 # How to use
 
