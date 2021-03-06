@@ -1,9 +1,10 @@
-import torch
+import torch, os
 import torch.nn as nn
 from torch.autograd import Variable
 from data_loading import *
 from rdkit import Chem
-
+from rdkit.Chem import rdDepictor, AllChem, Draw, rdMolDescriptors
+from rdkit.Chem.Draw import rdMolDraw2D
 '''
 the model
 '''
@@ -50,6 +51,33 @@ if cpu:
     model = model.cpu()
 model.eval()
 
+def checking_mol(smile):
+    file = open('data/chebi_smiles.txt', 'r')
+    i = 0
+    for line in file:
+        i+=1
+        line = line.strip('%s\n')
+        if line == smile:
+            message = 'This molecule already exists. Check line {}'.format(i)
+            break
+        else:
+            message = 'This is a new generated molecule'
+    file.close()
+    return message
+
+def common_template(smile):
+    template = Chem.MolFromSmiles(smile)
+    AllChem.Compute2DCoords(template)
+    ms = [Chem.MolFromSmiles(smi) for smi in mol_batch]
+    for m in ms:
+        AllChem.GenerateDepictionMatching2DStructure(m,template)
+        
+    img=Draw.MolsToGridImage(ms,molsPerRow=4,subImgSize=(200,200),legends=[x.GetProp("_Name") for x in ms])
+    return img.save('molgrid.png')
+
+def print_mol(smile):
+    mol = Chem.MolFromSmiles(smile)
+    return Chem.Draw.MolToImage(mol)
 
 def evaluate(prime_str='!', temperature=0.4):
     max_length = 200
@@ -81,7 +109,7 @@ def valid_smile(smile):
 def get_canonical_smile(smile):
     return Chem.MolToSmiles(Chem.MolFromSmiles(smile))
 
-def valid_smiles_at_temp(temp):
+def valid_smiles_at_temp(temp = 0.4):
     range_test = 100
     c=0
     for i in range(range_test):
@@ -89,7 +117,7 @@ def valid_smiles_at_temp(temp):
         if valid_smile(s):
             print(s)
             c+=1
-    return float(c/range_test)
+    return 'percentage of valid molecules in the test batch : {}'.format(float(c/range_test))
 
 def smiles_in_db(smile):
     smile = '!'+get_canonical_smile(smile)+' '
@@ -97,7 +125,7 @@ def smiles_in_db(smile):
         return True
     return False
 
-def percentage_variety_of_valid_at_temp(temp):
+def percentage_variety_of_valid_at_temp(temp = 0.4):
     range_test = 100
     c_v=0
     c_nd=0
@@ -107,5 +135,4 @@ def percentage_variety_of_valid_at_temp(temp):
             c_v+=1
             if not smiles_in_db(s):
                 c_nd+=1
-    return float(c_nd/c_v)
-
+    return 'Rate of new generated molecules in the test batch : {}'.format(float(c_nd/c_v))
